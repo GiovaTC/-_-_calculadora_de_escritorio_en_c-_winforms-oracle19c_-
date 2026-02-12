@@ -1,11 +1,13 @@
-using calculadora_oracle.Data;
+﻿using calculadora_oracle.Data;
 using calculadora_oracle.Model;
+using System;
+using System.Windows.Forms;
 
 namespace calculadora_oracle
 {
     public partial class FrmCalculadora : Form
     {
-        private OperacionDAO dao = new OperacionDAO();
+        private readonly OperacionDAO dao = new OperacionDAO();
 
         public FrmCalculadora()
         {
@@ -14,42 +16,97 @@ namespace calculadora_oracle
 
         private void Calcular(string tipo)
         {
-            double a = double.Parse(txtA.Text);
-            double b = double.Parse(txtB.Text);
-            double r = 0;
-
-            switch (tipo)
+            // 🔒 Validación Operando 1
+            if (!double.TryParse(txtA.Text, out double a))
             {
-                case "+":
-                    r = a + b;
-                    break;
-
-                case "-":
-                    r = a - b;
-                    break;
-
-                case "*":
-                    r = a * b;
-                    break;
-
-                case "/":
-                    if (b == 0)
-                        throw new Exception("Divisi�n por cero");
-                    r = a / b;
-                    break;
+                MessageBox.Show(
+                    "Ingrese un valor numérico válido en Operando 1",
+                    "Entrada inválida",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                txtA.Focus();
+                return;
             }
 
-            lblResultado.Text = r.ToString();
-
-            Operacion op = new Operacion
+            // 🔒 Validación Operando 2
+            if (!double.TryParse(txtB.Text, out double b))
             {
-                Operando1 = a,
-                Operando2 = b,
-                Tipo = tipo,
-                Resultado = r
-            };
+                MessageBox.Show(
+                    "Ingrese un valor numérico válido en Operando 2",
+                    "Entrada inválida",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning
+                );
+                txtB.Focus();
+                return;
+            }
 
-            dao.GuardarOperacion(op);
+            double r = 0;
+
+            try
+            {
+                switch (tipo)
+                {
+                    case "+":
+                        r = a + b;
+                        break;
+
+                    case "-":
+                        r = a - b;
+                        break;
+
+                    case "*":
+                        r = a * b;
+                        break;
+
+                    case "/":
+                        if (b == 0)
+                        {
+                            MessageBox.Show(
+                                "No se puede dividir por cero",
+                                "Error matemático",
+                                MessageBoxButtons.OK,
+                                MessageBoxIcon.Error
+                            );
+                            return;
+                        }
+                        r = a / b;
+                        break;
+
+                    default:
+                        MessageBox.Show(
+                            "Operación no válida",
+                            "Error",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error
+                        );
+                        return;
+                }
+
+                // Mostrar resultado
+                lblResultado.Text = r.ToString("0.##");
+
+                // Persistir operación en Oracle
+                Operacion op = new Operacion
+                {
+                    Operando1 = a,
+                    Operando2 = b,
+                    Tipo = tipo,
+                    Resultado = r
+                };
+
+                dao.GuardarOperacion(op);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    $"Ocurrió un error al procesar la operación:\n{ex.Message}",
+                    "Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error
+                );
+            }
         }
 
         private void btnSuma_Click(object sender, EventArgs e)
