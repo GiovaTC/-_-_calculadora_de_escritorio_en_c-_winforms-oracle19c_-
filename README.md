@@ -1,7 +1,9 @@
 # -_-_calculadora_de_escritorio_en_c-_winforms-oracle19c_- :.
 # 🧮 Calculadora de Escritorio en C# (WinForms + Oracle 19c):
 
-<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/4256d722-7a77-4fc7-a940-9fa7a3305ba0" />  
+<img width="1024" height="1024" alt="image" src="https://github.com/user-attachments/assets/4256d722-7a77-4fc7-a940-9fa7a3305ba0" />      
+
+<img width="2552" height="1079" alt="image" src="https://github.com/user-attachments/assets/2c95de3d-899d-4e15-8e54-996c86b38ae1" />    
 
 A continuación tienes una **solución profesional y funcional** para **Visual Studio 2022**:  
 una **calculadora de escritorio en C# (WinForms)** que **registra los cálculos en Oracle 19c** mediante un **procedimiento almacenado** .
